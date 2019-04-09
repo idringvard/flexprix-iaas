@@ -7,6 +7,7 @@
     list_files: yes
     remote_src: yes
   register: java_files
+  check_mode: no
 
 - name: Set java directory variable
   set_fact:
