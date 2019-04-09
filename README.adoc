@@ -5,11 +5,11 @@ Set of IAAS scripts to get production and development environments up and ready 
 Usage example:
 [source, yaml]
 ----
-- hosts: centos // <1>
+- hosts: centos <1>
   vars_files:
     - secrets.yml
   roles:
-    - role: java // <2>
+    - role: java <2>
       become: true
 ----
 <1> Declare hosts to apply
