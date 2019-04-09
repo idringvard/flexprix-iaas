@@ -1,1 +1,17 @@
 # flexprix-iaas
+:icons: font
+Set of IAAS scripts to get production and development environments up and ready on cloud
+
+Usage example:
+[source, yaml]
+----
+- hosts: centos // <1>
+  vars_files:
+    - secrets.yml
+  roles:
+    - role: java // <2>
+      become: true
+----
+<1> Declare hosts to apply
+<2> Declare roles to apply
+
