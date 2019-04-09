@@ -1,0 +1,31 @@
+---
+# tasks file for java
+- name: "Download and extract open jdk archive to {{openjdk_directory}}"
+  unarchive:
+    src: "{{openjdk_url}}"
+    dest: "{{openjdk_directory}}"
+    remote_src: yes
+
+- name: Setup environment variables
+  template:
+    src: jdk-env.sh.j2
+    dest: /etc/profile.d/jdk-env.sh
+    mode: 644
+
+- name: Stat for java executable
+  stat:
+    path: /usr/bin/java
+  register: java_link
+
+- name: Remove symbolic link if present
+  file:
+    path: /usr/bin/java
+    state: absent
+  when: java_link.stat.exists
+
+- name: Create symbolic links
+  file:
+    src: "{{openjdk_directory}}/jdk-11.0.2/bin/java"
+    path: /usr/bin/java
+    state: link
+  when: not java_link.stat.exists
