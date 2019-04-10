@@ -2,30 +2,30 @@
 
 - name: Check Jenkins init script exists
   stat:
-    path: " {{ jenkins_init_file }} "
+    path: "{{jenkins_init_file}}"
   register: jenkins_init_stat
 
 - name: Ensure Jenkins init script exists
   file:
-    path: " {{ jenkins_init_file }} "
+    path: "{{jenkins_init_file}}"
     state: touch
   when: not jenkins_init_stat.stat.exists
 
 - name: Set variables in init script
   lineinfile:
-    dest: " {{ jenkins_init_file }} "
-    insertafter: "^{{ item.option }}="
-    regexp: '^{{ item.option }}=\"\${{ item.option }} '
-    line: '{{ item.option }}="${{ item.option }} {{ item.value }}"'
+    dest: "{{jenkins_init_file}}"
+    insertafter: "^{{item.option}}="
+    regexp: '^{{item.option}}=\"\${{item.option}} '
+    line: '{{item.option}}="${{item.option}} {{item.value}}"'
     state: present
-  with_items: "{{ jenkins_init_changes }}"
+  with_items: "{{jenkins_init_changes}}"
   register: jenkins_init_prefix
 
 - name: Set Jenkins home directory
   lineinfile:
-    dest: "{{ jenkins_init_file }}"
+    dest: "{{jenkins_init_file}}"
     regexp: "^JENKINS_HOME=.*"
-    line: "JENKINS_HOME={{ jenkins_home }}"
+    line: "JENKINS_HOME={{jenkins_home}}"
   register: jenkins_home_config
 
 - name: Restart Jenkins after config changes
@@ -37,26 +37,26 @@
 - name: Set HTTP port in Jenkins config
   lineinfile:
     backrefs: true
-    dest: "{{ jenkins_init_file }}"
-    regexp: "^{{ jenkins_http_port_param }}="
-    line: "{{ jenkins_http_port_param }}={{ jenkins_port }}"
+    dest: "{{jenkins_init_file}}"
+    regexp: "^{{jenkins_http_port_param}}="
+    line: "{{jenkins_http_port_param}}={{jenkins_port}}"
   register: jenkins_http_config
 
-- name: 'Verify {{ jenkins_home }} exists'
+- name: 'Verify {{jenkins_home}} exists'
   file:
-    path: "{{ jenkins_home }}"
+    path: "{{jenkins_home}}"
     state: directory
-    owner: "{{ jenkins_owner }}"
-    group: "{{ jenkins_group }}"
+    owner: "{{jenkins_owner}}"
+    group: "{{jenkins_group}}"
     mode: u+rwx
     follow: true
 
 - name: Create custom init scripts directory
   file:
-    path: "{{ jenkins_home }}/init.groovy.d"
+    path: "{{jenkins_home}}/init.groovy.d"
     state: directory
-    owner: "{{ jenkins_owner }}"
-    group: "{{ jenkins_group }}"
+    owner: "{{jenkins_owner}}"
+    group: "{{jenkins_group}}"
     mode: 0755
 
 - name: Trigger handlers in case Jenkins installed
@@ -69,4 +69,4 @@
   when: >
     (jenkins_users_config is defined and jenkins_users_config.changed)
     or (jenkins_http_config is defined and jenkins_http_config.changed)
-    or (jenkins_home_config is defined abd jenkins_home_config.changed)
+    or (jenkins_home_config is defined and jenkins_home_config.changed)

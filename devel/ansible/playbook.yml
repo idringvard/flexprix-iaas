@@ -1,7 +1,28 @@
 ---
 - hosts: centos
+  become: yes
   vars_files:
     - secrets.yml
   roles:
     - role: java
-      become: true
+    - role: jenkins
+      vars:
+        jenkins_plugins:
+          - Folders
+          - Timestamper
+          - Pipeline
+          - Git
+          - PAM Authentication
+          - OWASP Markup Formatter
+          - Build Timeout
+          - Credentials Binding
+          - Wokspace Cleanup
+          - Gradle
+          - GitHub Branch Source
+          - "Pipeline: GitHub Groovy Libraries"
+          - "Pipeline: Stage View"
+          - SSH Slaves
+          - Matrix Authorization Strategy
+          - Email Extension
+          - Mailer
+          - Locale

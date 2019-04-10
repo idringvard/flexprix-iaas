@@ -8,8 +8,8 @@
 - name: Configure users
   template:
     src: basic-security.groovy.j2
-    dest: "{{ jenkins_home }}/init.groovy.d/basic-security.groovy"
-    owner: "{{ jenkins_owner }}"
-    group: "{{ jenkins_group }}"
+    dest: "{{jenkins_home}}/init.groovy.d/basic-security.groovy"
+    owner: "{{jenkins_owner}}"
+    group: "{{jenkins_group}}"
     mode: 0755
-  register: jenkins_user_config
+  register: jenkins_users_config

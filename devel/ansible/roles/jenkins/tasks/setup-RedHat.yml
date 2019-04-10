@@ -6,29 +6,31 @@
       - curl
       - libselinux-python
       - initscripts
+      - dejavu-sans-fonts
+      - fontconfig
     state: present
 
 - name: Ensure Jenkins repo is installed
   get_url:
-    url: "{{ jenkins_repo }}"
+    url: "{{jenkins_repo}}"
     dest: /etc/yum.repos.d/jenkins.repo
   when: jenkins_repo != ""
 
 - name: Add Jenkins repo GPG key
   rpm_key:
     state: present
-    key: "{{ jenkins_key }}"
+    key: "{{jenkins_key}}"
 
 - name: Download Jenkins specific version
   get_url:
-    url: "{{ jenkins_pkg }}/jenkins-{{ jenkins_version }}-1.1.noarch.rpm"
-    dest: "/tmp/jenkins-{{ jenkins_version }}-1.1.noarch.rpm"
+    url: "{{jenkins_pkg}}/jenkins-{{jenkins_version}}-1.1.noarch.rpm"
+    dest: "/tmp/jenkins-{{jenkins_version}}-1.1.noarch.rpm"
   register: jenkins_version_dist
   when: jenkins_version is defined
 
 - name: Install Jenkins specific version
   package:
-    name: "/tmp/jenkins-{{ jenkins_version }}-1.1.noarch.rpm"
+    name: "/tmp/jenkins-{{jenkins_version}}-1.1.noarch.rpm"
     state: present
   when: jenkins_version is defined and jenkins_version_dist.stat.exists
   notify: Configure users

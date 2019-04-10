@@ -1,8 +1,20 @@
 ---
 # tasks file for java
-- name: "Download and extract open jdk archive to {{openjdk_directory}}"
+- name: Stat for OpenJDK archive
+  stat:
+    path: /tmp/{{openjdk_tarball}}"
+  register: openjdk_archive
+
+- name: Download OpenJDK archive
+  get_url:
+    url: "{{openjdk_url}}"
+    dest: "/tmp/{{openjdk_tarball}}"
+  register: downloaded
+  when: not openjdk_archive.stat.exists
+
+- name: Extract OpenJDK archive
   unarchive:
-    src: "{{openjdk_url}}"
+    src: "/tmp/{{openjdk_tarball}}"
     dest: "{{openjdk_directory}}"
     list_files: yes
     remote_src: yes

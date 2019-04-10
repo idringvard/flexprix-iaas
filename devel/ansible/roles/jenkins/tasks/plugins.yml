@@ -2,30 +2,30 @@
 # jenkins_plugin module doesn't support password files.
 - name: Get Jenkins admin password from file.
   slurp:
-    src: "{{ jenkins_admin_pass_file }}"
+    src: "{{jenkins_admin_pass_file}}"
   register: adminpasswordfile
   no_log: true
   when: jenkins_admin_pass_file != ""
 
 - name: Set Jenkins admin password fact.
   set_fact:
-    jenkins_admin_password: "{{ adminpasswordfile.stdout | default(jenkins_admin_password) }}"
+    jenkins_admin_password: "{{adminpasswordfile['stdout'] | default(jenkins_admin_pass)}}"
   no_log: true
 
 # Update Jenkins so that plugin updates don't fail.
 - name: Create Jenkins updates directory.
   file:
-    path: "{{ jenkins_home }}/updates"
+    path: "{{jenkins_home}}/updates"
     state: directory
-    owner: "{{ jenkins_owner }}"
-    group: "{{ jenkins_group }}"
+    owner: "{{jenkins_owner}}"
+    group: "{{jenkins_group}}"
 
 - name: Download current plugin updates from Jenkins update site.
   get_url:
     url: "https://updates.jenkins.io/update-center.json"
-    dest: "{{ jenkins_home }}/updates/default.json"
-    owner: "{{ jenkins_owner }}"
-    group: "{{ jenkins_group }}"
+    dest: "{{jenkins_home}}/updates/default.json"
+    owner: "{{jenkins_owner}}"
+    group: "{{jenkins_group}}"
     mode: 0440
   changed_when: false
   register: get_result
@@ -35,24 +35,24 @@
 
 - name: Remove first and last line from json file.
   replace:
-    path: "{{ jenkins_home }}/updates/default.json"
+    path: "{{jenkins_home}}/updates/default.json"
     regexp: "1d;$d"
 
 - name: Install Jenkins plugins using password.
   jenkins_plugin:
-    name: "{{ item }}"
-    jenkins_home: "{{ jenkins_home }}"
-    url_username: "{{ jenkins_admin_user }}"
-    url_password: "{{ jenkins_admin_pass }}"
+    name: "{{item}}"
+    jenkins_home: "{{jenkins_home}}"
+    url_username: "{{jenkins_admin_user}}"
+    url_password: "{{jenkins_admin_password}}"
     state: "present"
     timeout: "30"
     updates_expiration: "86400"
     updates_url: https://updates.jenkins.io
-    url: "http://{{ jenkins_hostname }}:{{ jenkins_port }}"
+    url: "http://{{jenkins_hostname}}:{{jenkins_port}}{{jenkins_url_prefix}}"
     with_dependencies: true
-  with_items: "{{ jenkins_plugins }}"
-  when: jenkins_admin_pass != ""
-  notify: restart jenkins
+  with_items: "{{jenkins_plugins}}"
+  when: jenkins_admin_password != ""
+  notify: Restart Jenkins
   register: plugin_result
   until: plugin_result is success
   retries: 3

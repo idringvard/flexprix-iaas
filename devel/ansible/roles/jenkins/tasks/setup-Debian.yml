@@ -5,35 +5,36 @@
     name:
       - curl
       - apt-transport-https
+      - ttf-dejavu
     state: present
 
 - name: Add Jenkins apt repository key.
   apt_key:
-    url: "{{ jenkins_key }}"
+    url: "{{jenkins_key}}"
     state: present
 
 - name: Add Jenkins apt repository.
   apt_repository:
-    repo: "{{ jenkins_repo }}"
+    repo: "{{jenkins_repo}}"
     state: present
     update_cache: true
   when: jenkins_repo != ""
 
 - name: Download specific Jenkins version.
   get_url:
-    url: "{{ jenkins_pkg }}/jenkins_{{ jenkins_version }}_all.deb"
-    dest: "/tmp/jenkins_{{ jenkins_version }}_all.deb"
+    url: "{{jenkins_pkg}}/jenkins_{{jenkins_version}}_all.deb"
+    dest: "/tmp/jenkins_{{jenkins_version}}_all.deb"
   when: jenkins_version is defined
 
 - name: Check if we downloaded a specific version of Jenkins.
   stat:
-    path: "/tmp/jenkins_{{ jenkins_version }}_all.deb"
+    path: "/tmp/jenkins_{{jenkins_version}}_all.deb"
   register: specific_version
   when: jenkins_version is defined
 
 - name: Install our specific version of Jenkins.
   apt:
-    deb: "/tmp/jenkins_{{ jenkins_version }}_all.deb"
+    deb: "/tmp/jenkins_{{jenkins_version}}_all.deb"
     state: present
   when: jenkins_version is defined and specific_version.stat.exists
   notify: Configure users

@@ -1,9 +1,10 @@
 ---
 # defaults file for jenkins
-jenkins_home: /opt/jenkins
+jenkins_home: /var/lib/jenkins
 jenkins_hostname: localhost
 jenkins_port: 8080
-jenkins_jar: /opt/jenkins/jenkins-cli.jar
+jenkins_url_prefix: ""
+jenkins_jar: /opt/jenkins-cli.jar
 jenkins_java_options: "-Djenkins.install.runSetupWizard=false"
 
 jenkins_admin_user: admin
@@ -11,8 +12,12 @@ jenkins_admin_pass: admin
 jenkins_admin_pass_file: ""
 
 jenkins_owner: jenkins
-jenkins_group: "{{ jenkins_owner }}"
+jenkins_group: "{{jenkins_owner}}"
+
+jenkins_plugins: []
 
 jenkins_init_changes:
   - option: "JENKINS_ARGS"
-    value: "--prefix={{ jenkins_java_opts_env_var }}"
+    value: "--prefix={{jenkins_url_prefix}}"
+  - option: "{{jenkins_java_opts_env_var}}"
+    value: "{{jenkins_java_options}}"
