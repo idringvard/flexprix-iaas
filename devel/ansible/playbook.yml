@@ -41,8 +41,7 @@
         nexus_public_hostname: repo.flexprix.com
         nexus_config_docker: true
         nexus_config_npm: true
-        nexus_delete_default_repos: true
-        nexus_delete_default_blobstore: true
+        nexus_delete_default_repos: false
         nexus_blob_split: true
         nexus_blob_names:
           docker:
@@ -100,7 +99,7 @@
       lineinfile:
         regexp: "^INSTALL4J_JAVA_HOME_OVERRIDE=.*"
         line: "INSTALL4J_JAVA_HOME_OVERRIDE={{openjdk_directory}}/{{extracted_dir}}"
-        dest: "{{nexus_installation_dir}}/bin/nexus"
+        dest: "{{nexus_installation_dir}}/nexus-latest/bin/nexus"
       notify: nexus-service-restart
 
     - name: Open Jenkins firewall port
