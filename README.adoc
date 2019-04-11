@@ -1,5 +1,5 @@
 # flexprix-iaas
-:icons: font
+:icons:
 Set of IAAS scripts to get production and development environments up and ready on cloud
 
 Usage example:
