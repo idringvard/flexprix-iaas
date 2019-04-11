@@ -1,0 +1,6 @@
+---
+# tasks file for rsync-role
+- name: Install rsync for Nexus OSS sake
+  package:
+    name: rsync
+    state: present

@@ -4,9 +4,9 @@
   vars_files:
     - secrets.yml
   roles:
-    - role: java
     - role: jenkins
       vars:
+        jenkins_admin_pass: admin
         jenkins_plugins:
           - Folders
           - Timestamper
@@ -26,3 +26,93 @@
           - Email Extension
           - Mailer
           - Locale
+    - role: rsync-role
+    - role: ansible-thoteam.nexus3-oss
+      vars:
+        nexus_timezone: EEST
+        nexus_purge: true
+        nexus_os_group: nexus
+        nexus_os_user: nexus
+        nexus_docker_group_port: 5000
+        nexus_docker_hosted_port: 5001
+        nexus_docker_proxy_port: 5002
+        nexus_public_hostname: repo.flexprix.com
+        nexus_config_docker: true
+        nexus_config_npm: true
+        nexus_delete_default_repos: true
+        nexus_delete_default_blobstore: true
+        nexus_blob_split: true
+        nexus_blob_names:
+          docker:
+            blob: docker
+          npm:
+            blob: npm
+          mvn:
+            blob: maven
+        nexus_blobstores:
+          - name: docker
+            type: file
+            path: /var/lib/devtools/nexus/blob
+          - name: npm
+            type: file
+            path: /var/lib/devtools/nexus/blob
+          - name: maven
+            type: file
+            path: /var/lib/devtools/nexus/blob
+        nexus_repos_maven_hosted:
+          - name: mvn-release
+            version_policy: release
+            write_policy: allow_once
+          - name: mvn-snapshot
+            version_policy: snapshot
+            write_policy: allow
+        nexus_repos_maven_proxy:
+          - name: mvn-proxy
+            remote_url: https://repo1.maven.org/maven2/
+            layout_policy: permissive
+        nexus_repos_maven_group:
+          - name: mvn
+            member_groups:
+              - mvn-release
+              - mvn-snapshot
+              - mvn-proxy
+        nexus_repos_docker_group:
+          - name: docker
+            http_port: "{{nexus_docker_group_port}}"
+            v1_enabled: true
+            member_repos:
+              - docker-hosted
+              - docker-proxy
+        nexus_repos_npm_hosted:
+          - name: npm-hosted
+            blob_store: "{{nexus_blob_names.npm.blob}}"
+        nexus_repos_npm_group:
+          - name: npm-all
+            blob_store: "{{ nexus_blob_names.npm.blob }}"
+            member_repos:
+              - npm-hosted
+              - npm-proxy
+
+  tasks:
+    - name: Override Nexus OSS java
+    - name: Open Jenkins firewall port
+      firewalld:
+        permanent: yes
+        zone: public
+        port: 8080/tcp
+        state: enabled
+        immediate: yes
+    - name: Open Nexus OSS firewall port
+      firewalld:
+        permanent: yes
+        zone: public
+        port: 8081/tcp
+        state: enabled
+        immediate: yes
+    - name: Open Docker repository ports
+      firewalld:
+        permanent: yes
+        zone: public
+        port: 5000-5002/tcp
+        state: enabled
+        immediate: yes

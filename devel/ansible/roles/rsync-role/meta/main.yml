@@ -1,9 +1,7 @@
 ---
-dependencies:
-  - java
 galaxy_info:
   author: idringvard
-  description: Jenkins CI
+  description: Rsync for Nexus install
   license: "MIT"
   min_ansible_version: 2.7
   platforms:

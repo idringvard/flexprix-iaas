@@ -40,3 +40,4 @@
     name: jenkins
     state: present
   notify: Configure users
+
