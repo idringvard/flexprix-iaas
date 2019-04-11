@@ -26,7 +26,9 @@
           - Email Extension
           - Mailer
           - Locale
+
     - role: rsync-role
+    
     - role: ansible-thoteam.nexus3-oss
       vars:
         nexus_timezone: EEST
@@ -95,6 +97,12 @@
 
   tasks:
     - name: Override Nexus OSS java
+      lineinfile:
+        regexp: "^INSTALL4J_JAVA_HOME_OVERRIDE=.*"
+        line: "INSTALL4J_JAVA_HOME_OVERRIDE={{openjdk_directory}}/{{extracted_dir}}"
+        dest: "{{nexus_installation_dir}}/bin/nexus"
+      notify: nexus-service-restart
+
     - name: Open Jenkins firewall port
       firewalld:
         permanent: yes
@@ -102,6 +110,7 @@
         port: 8080/tcp
         state: enabled
         immediate: yes
+
     - name: Open Nexus OSS firewall port
       firewalld:
         permanent: yes
@@ -109,6 +118,7 @@
         port: 8081/tcp
         state: enabled
         immediate: yes
+
     - name: Open Docker repository ports
       firewalld:
         permanent: yes
