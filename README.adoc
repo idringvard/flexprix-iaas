@@ -1,5 +1,7 @@
+:icons: font
+:iconfont-cdn: //maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css
+
 # flexprix-iaas
-:icons:
 Set of IAAS scripts to get production and development environments up and ready on cloud
 
 Usage example:
