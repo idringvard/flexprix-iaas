@@ -1,6 +1,0 @@
----
-# tasks file for rsync-role
-- name: Ensure rsync is installed for use by Nexus OSS
-  package:
-    name: rsync
-    state: present

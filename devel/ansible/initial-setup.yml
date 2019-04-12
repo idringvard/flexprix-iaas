@@ -3,11 +3,30 @@
   become: yes
   vars_files:
     - secrets.yml
+  pre_tasks:
+    - name: Ensure all required packages installed
+      package:
+        name: 
+          - https://download.postgresql.org/pub/repos/yum/11/redhat/rhel-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+          - rsync
+        state: present
   roles:
     - role: geerlingguy.java
       vars:
         java_packages:
           - java-1.8.0-openjdk
+    - role: geerlingguy.postgresql
+      vars:
+        postgresql_enablerepo: pgdg11
+        postgresql_version: 11
+        postgresql_daemon: postgresql-11
+        postgresql_databases:
+          - name: default
+        posgresql_packages:
+          - postgresql11
+          - postgresql11-libs
+          - postgresql11-contrib
+          - postgresql11-server
     - role: geerlingguy.jenkins
       vars:
         jenkins_plugins:
@@ -29,10 +48,8 @@
           - Email Extension
           - Mailer
           - Locale
-    - role: rsync-role
     - role: ansible-thoteam.nexus3-oss
       vars:
-        nexus_purge: true
         nexus_timezone: EEST
         nexus_os_group: nexus
         nexus_os_user: nexus
@@ -97,26 +114,16 @@
               - npm-proxy
 
   tasks:
-    - name: Open Jenkins firewall port
+    - name: Ensure services ports opened
       firewalld:
         permanent: yes
         zone: public
-        port: 8080/tcp
+        port: "{{item}}"
         state: enabled
         immediate: yes
-
-    - name: Open Nexus OSS firewall port
-      firewalld:
-        permanent: yes
-        zone: public
-        port: 8081/tcp
-        state: enabled
-        immediate: yes
-
-    - name: Open Docker repository ports
-      firewalld:
-        permanent: yes
-        zone: public
-        port: 5000-5002/tcp
-        state: enabled
-        immediate: yes
+      with_items:
+        - 5432/tcp
+        - 8080/tcp
+        - 8081/tcp
+        - 8082/tcp
+        - 5000-5002/tcp
