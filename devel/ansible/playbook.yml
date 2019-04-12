@@ -4,9 +4,12 @@
   vars_files:
     - secrets.yml
   roles:
-    - role: jenkins
+    - role: geerlingguy.java
       vars:
-        jenkins_admin_pass: admin
+        java_packages:
+          - java-1.8.0-openjdk
+    - role: geerlingguy.jenkins
+      vars:
         jenkins_plugins:
           - Folders
           - Timestamper
@@ -26,13 +29,11 @@
           - Email Extension
           - Mailer
           - Locale
-
     - role: rsync-role
-    
     - role: ansible-thoteam.nexus3-oss
       vars:
-        nexus_timezone: EEST
         nexus_purge: true
+        nexus_timezone: EEST
         nexus_os_group: nexus
         nexus_os_user: nexus
         nexus_docker_group_port: 5000
@@ -42,7 +43,7 @@
         nexus_config_docker: true
         nexus_config_npm: true
         nexus_delete_default_repos: true
-        nexus_delete_default_blobstore: true
+        nexus_delete_default_blobstore: false
         nexus_blob_split: true
         nexus_blob_names:
           docker:
@@ -96,13 +97,6 @@
               - npm-proxy
 
   tasks:
-    - name: Override Nexus OSS java
-      lineinfile:
-        regexp: "^INSTALL4J_JAVA_HOME_OVERRIDE=.*"
-        line: "INSTALL4J_JAVA_HOME_OVERRIDE={{openjdk_directory}}/{{extracted_dir}}"
-        dest: "{{nexus_installation_dir}}/bin/nexus"
-      notify: nexus-service-restart
-
     - name: Open Jenkins firewall port
       firewalld:
         permanent: yes

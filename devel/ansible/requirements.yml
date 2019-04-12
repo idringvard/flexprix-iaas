@@ -1,2 +1,4 @@
 ---
+- role: geerlingguy.java
+- role: geerlingguy.jenkins
 - role: ansible-thoteam.nexus3-oss
