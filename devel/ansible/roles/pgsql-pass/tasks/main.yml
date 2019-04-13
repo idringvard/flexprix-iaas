@@ -1,0 +1,8 @@
+---
+# tasks file for jira-pgsql
+- name: Ensure PostgreSQL default password is set
+  postgresql_user:
+    name: postgres
+    password: "{{pgsql_default_password}}"
+  become: yes
+  become_user: postgres

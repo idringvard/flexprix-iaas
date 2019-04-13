@@ -31,17 +31,28 @@
         postgresql_bin_path: /usr/pgsql-11/bin
         postgresql_data_dir: /var/lib/pgsql/11/data
         postgresql_config_path: /var/lib/pgsql/11/data
-        postgresql_databases:
-          - name: default
         postgresql_packages:
           - postgresql11
           - postgresql11-libs
           - postgresql11-contrib
           - postgresql11-server
+        postgresql_hba_entries:
+          - {type: local, database: all, user: all, auth_method: md5}
+          - {type: host, database: all, user: all, address: '127.0.0.1/32', auth_method: md5}
+          - {type: host, database: all, user: all, address: '::1/128', auth_method: md5}
+          - {type: host, database: all, user: all, address: 'localhost', auth_method: md5}
+    - role: pgsql-pass
+      vars:
+        pgsql_default_password: "{{jira_postgres_login_password}}"
     - role: geerlingguy.java
       vars:
         java_packages:
           - java-1.8.0-openjdk
+    - role: stuvusit.jira
+      vars:
+        jira_java_home: java-1.8.0-openjdk-1.8.0.201.b09-2.el7_6.x86_64
+        jira_connector_port: 8082
+        jira_version: 8.1.0
     - role: geerlingguy.jenkins
       vars:
         jenkins_plugins:
@@ -127,7 +138,6 @@
             member_repos:
               - npm-hosted
               - npm-proxy
-
   tasks:
     - name: Ensure required firewall ports opened
       firewalld:
