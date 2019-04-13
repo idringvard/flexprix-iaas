@@ -1,25 +1,17 @@
 galaxy_info:
-  author: Janne Heß
-  description: Install JIRA and generate configuration files
-  company: stuvus (https://stuvus.uni-stuttgart.de)
+  author: Igor Druzhynin
+  description: Install JIRA software
 
-  license: CC-BY-SA
+  license: MIT
 
-  min_ansible_version: 2.4
-
-  platforms:
-    - name: Ubuntu
-      versions:
-        - xenial
-        - yakkety
-        - zesty
-        - artful
+  min_ansible_version: 2.7
 
   galaxy_tags:
     - java
-    - oracle
+    - openjdk
     - jre
     - jira
+    - jira-software
     - issue-tracker
     - atlassian
 

@@ -6,15 +6,17 @@ jira_java_opts: -Xms1024M -Xmx1024M
 jira_package: atlassian-jira-software-{{ jira_version }}
 
 jira_shutdown_port: 8005
-jira_connector_port: 8080
-jira_connector_max_threads: 150
-jira_connector_min_spare_threads: 25
-jira_connector_connection_timeout: 20000
-jira_connector_max_http_header_size: 8192
-jira_connector_accept_count: 100
+jira_port: 8080
+jira_max_threads: 150
+jira_min_spare_threads: 25
+jira_connection_timeout: 20000
+jira_max_http_header_size: 8192
+jira_accept_count: 100
+jira_min_memory: 1024m
+jira_max_memory: 1024m
 
-jira_configure_postgres: true
-jira_postgres_login_host: localhost
-jira_postgres_login_user: postgres
-jira_postgres_user: jira
-jira_postgres_database: jira
+jira_db_configure: true
+jira_db_login_host: localhost
+jira_db_login_user: postgres
+jira_db_user: jira
+jira_database: jira

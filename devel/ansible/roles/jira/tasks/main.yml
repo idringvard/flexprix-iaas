@@ -85,10 +85,22 @@
 - name: Set Jira working directory properties
   copy:
     dest: "{{jira_home_dir}}/atlassian-jira/WEB-INF/classes/jira-application.properties"
-    content: "# Ansible managed - do not edit here!\njira.home=/var/lib/jira\n"
+    content: "jira.home=/var/lib/jira\n"
 
-- include_tasks: postgresql.yml
-  when: jira_configure_postgres
+- name: Set Jira minimal memory settings properties
+  lineinfile:
+    regexp: "^JVM_MINIMUM_MEMORY=*"
+    line: "JVM_MINIMUM_MEMORY={{jira_min_memory}}"
+    path: "{{jira_home_dir}}/bin/setenv.sh"
+
+- name: Set Jira maximum memory settings properties
+  lineinfile:
+    regexp: "^JVM_MAXIMUM_MEMORY=*"
+    line: "JVM_MAXIMUM_MEMORY={{jira_max_memory}}"
+    path: "{{jira_home_dir}}/bin/setenv.sh"
+
+- include_tasks: database.yml
+  when: jira_configure_db
 
 - name: Create Jira systemd script
   template:

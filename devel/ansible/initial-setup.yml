@@ -48,7 +48,7 @@
     - role: jira
       vars:
         jira_java_home: /usr/lib/jvm/jre-1.8.0-openjdk
-        jira_connector_port: 8082
+        jira_port: 8082
         jira_version: 8.1.0
     - role: geerlingguy.jenkins
       vars:
