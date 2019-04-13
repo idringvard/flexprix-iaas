@@ -1,5 +1,5 @@
 [target]
-centos ansible_host=172.25.41.29 ansible_connection=ssh ansible_port=22 ansible_user=ingvard ansible_ssh_private_key_file=~/.ssh/id_rsa
+centos ansible_host=192.168.0.112 ansible_connection=ssh ansible_port=22 ansible_user=ingvard ansible_ssh_private_key_file=~/.ssh/id_ed25519
 
 [local]
 localhsot ansible_connection=local

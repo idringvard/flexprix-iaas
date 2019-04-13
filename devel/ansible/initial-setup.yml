@@ -4,6 +4,18 @@
   vars_files:
     - secrets.yml
   pre_tasks:
+    - name: Configure yum base packages for PostgreSQL
+      ini_file:
+        path: /etc/yum.repos.d/CentOS-Base.repo
+        section: base
+        option: exclude
+        value: postgresql*
+    - name: Configure yum updates packages for PostgreSQL
+      ini_file:
+        path: /etc/yum.repos.d/CentOS-Base.repo
+        section: updates
+        option: exclude
+        value: postgresql*
     - name: Ensure all required packages installed
       package:
         name: 
@@ -11,22 +23,25 @@
           - rsync
         state: present
   roles:
-    - role: geerlingguy.java
-      vars:
-        java_packages:
-          - java-1.8.0-openjdk
     - role: geerlingguy.postgresql
       vars:
         postgresql_enablerepo: pgdg11
         postgresql_version: 11
         postgresql_daemon: postgresql-11
+        postgresql_bin_path: /usr/pgsql-11/bin
+        postgresql_data_dir: /var/lib/pgsql/11/data
+        postgresql_config_path: /var/lib/pgsql/11/data
         postgresql_databases:
           - name: default
-        posgresql_packages:
+        postgresql_packages:
           - postgresql11
           - postgresql11-libs
           - postgresql11-contrib
           - postgresql11-server
+    - role: geerlingguy.java
+      vars:
+        java_packages:
+          - java-1.8.0-openjdk
     - role: geerlingguy.jenkins
       vars:
         jenkins_plugins:
