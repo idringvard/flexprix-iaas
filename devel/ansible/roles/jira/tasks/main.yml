@@ -82,15 +82,10 @@
     - webapps
     - work
 
-- name: Set home directory
+- name: Set Jira working directory properties
   copy:
     dest: "{{jira_home_dir}}/atlassian-jira/WEB-INF/classes/jira-application.properties"
     content: "# Ansible managed - do not edit here!\njira.home=/var/lib/jira\n"
-
-- name: Set Java options
-  copy:
-    dest: /etc/default/jira
-    content: "# Ansible managed - do not edit here!\nJAVA_OPTS='{{ jira_java_opts }}'\n"
 
 - include_tasks: postgresql.yml
   when: jira_configure_postgres
