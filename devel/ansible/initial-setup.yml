@@ -36,11 +36,7 @@
           - postgresql11-libs
           - postgresql11-contrib
           - postgresql11-server
-        postgresql_hba_entries:
-          - {type: local, database: all, user: all, auth_method: md5}
-          - {type: host, database: all, user: all, address: '127.0.0.1/32', auth_method: md5}
-          - {type: host, database: all, user: all, address: '::1/128', auth_method: md5}
-          - {type: host, database: all, user: all, address: 'localhost', auth_method: md5}
+        postgresql_hba_entries: []
     - role: pgsql-pass
       vars:
         pgsql_default_password: "{{jira_postgres_login_password}}"
@@ -48,9 +44,10 @@
       vars:
         java_packages:
           - java-1.8.0-openjdk
-    - role: stuvusit.jira
+        java_home: /usr/lib/jvm/jre-1.8.0-openjdk
+    - role: jira
       vars:
-        jira_java_home: java-1.8.0-openjdk-1.8.0.201.b09-2.el7_6.x86_64
+        jira_java_home: /usr/lib/jvm/jre-1.8.0-openjdk
         jira_connector_port: 8082
         jira_version: 8.1.0
     - role: geerlingguy.jenkins

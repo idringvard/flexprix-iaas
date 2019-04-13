@@ -3,4 +3,3 @@
 - role: geerlingguy.jenkins
 - role: geerlingguy.postgresql
 - role: ansible-thoteam.nexus3-oss
-- role: stuvusit.jira
