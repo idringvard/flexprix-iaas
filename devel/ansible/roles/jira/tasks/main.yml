@@ -100,7 +100,7 @@
     path: "{{jira_home_dir}}/bin/setenv.sh"
 
 - include_tasks: database.yml
-  when: jira_configure_db
+  when: jira_db_configure
 
 - name: Create Jira systemd script
   template:

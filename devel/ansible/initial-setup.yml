@@ -39,7 +39,7 @@
         postgresql_hba_entries: []
     - role: pgsql-pass
       vars:
-        pgsql_default_password: "{{jira_postgres_login_password}}"
+        pgsql_default_password: "{{jira_db_login_password}}"
     - role: geerlingguy.java
       vars:
         java_packages:

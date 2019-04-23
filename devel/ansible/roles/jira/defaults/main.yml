@@ -2,7 +2,6 @@
 jira_version: 8.1.0
 jira_home_dir: /opt/atlassian
 jira_java_home: /usr/lib/jvm/jre-1.8.0-openjdk
-jira_java_opts: -Xms1024M -Xmx1024M
 jira_package: atlassian-jira-software-{{ jira_version }}
 
 jira_shutdown_port: 8005
