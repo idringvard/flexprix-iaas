@@ -2,10 +2,11 @@
 jira_version: 8.1.0
 jira_home_dir: /opt/atlassian
 jira_java_home: /usr/lib/jvm/jre-1.8.0-openjdk
-jira_package: atlassian-jira-software-{{ jira_version }}
+jira_package: atlassian-jira-software-{{jira_version}}
 
 jira_shutdown_port: 8005
 jira_port: 8080
+jira_listen_address: 0.0.0.0
 jira_max_threads: 150
 jira_min_spare_threads: 25
 jira_connection_timeout: 20000

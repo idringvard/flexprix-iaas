@@ -10,7 +10,7 @@
 
     <Service name="Catalina">
         <!-- Relaxing chars because of JRASERVER-67974 -->
-        <Connector port="{{jira_port}}" relaxedPathChars="[]|" relaxedQueryChars="[]|{}^&#x5c;&#x60;&quot;&lt;&gt;"
+        <Connector address="{{jira_listen_address}}" port="{{jira_port}}" relaxedPathChars="[]|" relaxedQueryChars="[]|{}^&#x5c;&#x60;&quot;&lt;&gt;"
                    maxThreads="{{jira_max_threads}}" minSpareThreads="{{jira_min_spare_threads}}"
                    connectionTimeout="{{jira_connection_timeout}}" enableLookups="false"
                    maxHttpHeaderSize="{{jira_max_http_header_size}}" protocol="HTTP/1.1" useBodyEncodingForURI="true" redirectPort="8443"

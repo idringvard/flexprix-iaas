@@ -37,6 +37,9 @@
           - postgresql11-contrib
           - postgresql11-server
         postgresql_hba_entries: []
+        postgresql_global_config_options:
+          - option: unix_socket_directories
+            value: '{{ postgresql_unix_socket_directories | join(",") }}'
     - role: pgsql-pass
       vars:
         pgsql_default_password: "{{jira_db_login_password}}"
@@ -50,6 +53,7 @@
         jira_java_home: /usr/lib/jvm/jre-1.8.0-openjdk
         jira_port: 8082
         jira_version: 8.1.0
+        jira_listen_address: 127.0.0.1
     - role: geerlingguy.jenkins
       vars:
         jenkins_plugins:
@@ -71,6 +75,14 @@
           - Email Extension
           - Mailer
           - Locale
+        jenkins_init_changes:
+          - option: "JENKINS_ARGS"
+            value: "--prefix={{ jenkins_url_prefix }}"
+          - option: "{{ jenkins_java_options_env_var }}"
+            value: "{{ jenkins_java_options }}"
+          - option: "JENKINS_LISTEN_ADDRESS"
+            value: "\"127.0.0.1\""
+
     - role: ansible-thoteam.nexus3-oss
       vars:
         nexus_timezone: EEST
@@ -136,6 +148,13 @@
               - npm-hosted
               - npm-proxy
   tasks:
+    - name: Bind Nexus service to 127.0.0.1 only
+      lineinfile:
+        dest: "{{nexus_default_settings_file}}"
+        regexp: "^application-host=.*"
+        line: "application-host=127.0.0.1"
+      notify:
+        - nexus-service-restart
     - name: Ensure required firewall ports opened
       firewalld:
         permanent: yes
@@ -147,4 +166,6 @@
         - 8080/tcp
         - 8081/tcp
         - 8082/tcp
+        - 443/tcp
+        - 80/tcp
         - 5000-5002/tcp
